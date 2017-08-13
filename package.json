@@ -1,0 +1,24 @@
+{
+  "name": "signin-web",
+  "version": "1.0.0",
+  "description": "电子签到网页端",
+  "private": true,
+  "author": {
+    "name": "石威林",
+    "email": "934587911@qq.com",
+    "url": "weilinshi.org"
+  },
+  "scripts": {
+    "start": "poi src/index.js",
+    "build": "poi build src/index.js"
+  },
+  "engines": {
+    "node": ">=6"
+  },
+  "devDependencies": {
+    "mint-ui": "^2.2.9",
+    "poi": "^9.2.4",
+    "vue-router": "^2.7.0",
+    "vuex": "^2.3.1"
+  }
+}

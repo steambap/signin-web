@@ -4,6 +4,8 @@ import router from './router';
 import store from './store';
 import Mint from 'mint-ui';
 import 'mint-ui/lib/style.css';
+import './style.css';
+
 Vue.use(Mint);
 
 Vue.config.errorHandler = console.error;

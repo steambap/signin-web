@@ -1,8 +1,8 @@
 <template>
 	<div>
-		<mt-cell v-for="(name, index) in names"
-			:key="index"
-			:title="name"></mt-cell>
+		<mt-cell v-for="item in nameList"
+			:key="item.index"
+			:title="item.name"></mt-cell>
 		<div class="mint-palette-button"
 			id="fab"
 			@click="addName">
@@ -16,7 +16,48 @@
 					type="number"
 					v-model.trim="editName"></mt-field>
 			</div>
-
+			<div class="mint-cell">
+				<div class="mint-cell-wrapper">
+					<div class="mint-cell-title">
+						<checkbox :checked.sync="tagTable['负责人']" value="负责人"></checkbox>
+					</div>
+					<div class="mint-cell-title">
+						<checkbox :checked.sync="tagTable['熬粥']" value="熬粥"></checkbox>
+					</div>
+					<div class="mint-cell-title">
+						<checkbox :checked.sync="tagTable['前行']" value="前行"></checkbox>
+					</div>
+				</div>
+			</div>
+			<div class="mint-cell">
+				<div class="mint-cell-wrapper">
+					<div class="mint-cell-title">
+						<checkbox :checked.sync="tagTable['摄影']" value="摄影"></checkbox>
+					</div>
+					<div class="mint-cell-title">
+						<checkbox :checked.sync="tagTable['日志']" value="日志"></checkbox>
+					</div>
+					<div class="mint-cell-title">
+						<checkbox :checked.sync="tagTable['文宣']" value="文宣"></checkbox>
+					</div>
+				</div>
+			</div>
+			<div class="mint-cell">
+				<div class="mint-cell-wrapper">
+					<div class="mint-cell-title">
+						<checkbox :checked.sync="tagTable['新人']" value="新人"></checkbox>
+					</div>
+					<div class="mint-cell-title">
+						<checkbox :checked.sync="tagTable['结行']" value="结行"></checkbox>
+					</div>
+					<div class="mint-cell-title">
+						<checkbox :checked.sync="tagTable['后勤']" value="后勤"></checkbox>
+					</div>
+					<div class="mint-cell-title">
+						<checkbox :checked.sync="tagTable['环保']" value="环保"></checkbox>
+					</div>
+				</div>
+			</div>
 			<div class="d-flex">
 				<div class="flex-0 p-8">
 					<mt-button type="primary"
@@ -36,12 +77,27 @@
 </template>
 
 <script>
+import checkbox from '../component/checkbox.vue';
+
 export default {
 	name: 'checkin',
+	components: {checkbox},
 	data() {
 		return {
-			inputNamePopVis: false,
-			editName: ''
+			inputNamePopVis: true,
+			editName: '',
+			tagTable: {
+				'负责人': false,
+				'熬粥': false,
+				'前行': false,
+				'摄影': false,
+				'日志': false,
+				'文宣': false,
+				'新人': false,
+				'结行': false,
+				'后勤': false,
+				'环保': false
+			}
 		};
 	},
 	computed: {
@@ -50,6 +106,16 @@ export default {
 		},
 		tags() {
 			return this.$store.getters.tags;
+		},
+		nameList() {
+			return this.names.map((name, i) => {
+				const tagList = this.tags[i];
+				const tagSurfix = tagList ? '（' + tagList.join('，') + '）' : '';
+				return {
+					name: (i + 1) + '、' + name + tagSurfix,
+					index: i
+				};
+			});
 		},
 		hasName() {
 			return this.editName.length > 0;
@@ -60,7 +126,11 @@ export default {
 			this.inputNamePopVis = true;
 		},
 		confirmName() {
-			this.$store.dispatch('addName', {name: this.editName, tagList: []});
+			const tagList = Object.keys(this.tagTable).filter(key => {
+				return this.tagTable[key];
+			});
+			console.log(this.tagTable)
+			this.$store.dispatch('addName', {name: this.editName, tagList});
 			this.inputNamePopVis = false;
 		}
 	}

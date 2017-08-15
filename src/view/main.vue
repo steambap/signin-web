@@ -68,8 +68,6 @@
 import { RefreshCwIcon, MessageCircleIcon, MapPinIcon, EditIcon } from 'vue-feather-icons';
 import xzTable from '../xz-table';
 
-const xzList = Object.keys(xzTable).map(key => xzTable[key]);
-
 export default {
 	name: 'main',
 	components: { RefreshCwIcon, MessageCircleIcon, MapPinIcon, EditIcon },
@@ -80,6 +78,7 @@ export default {
 				loc: key
 			};
 		});
+
 		return {
 			date: new Date(),
 			locPickerVisible: false,

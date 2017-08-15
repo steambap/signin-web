@@ -3,6 +3,10 @@ import Vuex from 'vuex';
 
 Vue.use(Vuex);
 
+const apiOrigin = process.env.NODE_ENV === 'development'
+	? '/api/log'
+	: 'http://139.129.225.83:8900/log';
+
 const state = {
 	location: '11',
 	date: new Date().toISOString().slice(0, 10),
@@ -27,6 +31,7 @@ const mutations = {
 	},
 	updateLocation(state, newLocation) {
 		state.location = newLocation;
+		localStorage.setItem('sign_loc', newLocation);
 	},
 	addName(state, payload) {
 		state.names.push(payload.name);

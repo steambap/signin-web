@@ -8,31 +8,7 @@
 				<checkin></checkin>
 			</mt-tab-container-item>
 			<mt-tab-container-item id="comment">
-				<mt-field label="杯数"
-					type="number"
-					v-model="cupSize"
-					@input="hasChange = true"></mt-field>
-				<mt-field label="备忘"
-					type="textarea"
-					rows="4"
-					v-model="comment"
-					@input="hasChange = true"></mt-field>
-			<div class="d-flex bg-white">
-				<div class="flex-0 p-8">
-					<mt-button type="primary"
-						size="large"
-						:disabled="!hasChange"
-						@click="confirmChange">
-						保存更改</mt-button>
-				</div>
-				<div class="flex-0 p-8">
-					<mt-button type="default"
-						size="large"
-						:disabled="!hasChange"
-						@click="resetChange">
-						撤销更改</mt-button>
-				</div>
-			</div>
+				<comment :active="active"></comment>
 			</mt-tab-container-item>
 		</mt-tab-container>
 		<mt-tabbar v-model="active">
@@ -49,6 +25,29 @@
 				备注
 			</mt-tab-item>
 		</mt-tabbar>
+		<!-- popup -->
+		<mt-popup
+			ref="locPopup"
+			v-model="locPopupVis"
+			position="bottom"
+			class="popup-fullscreen">
+			<h3 class="text-center text-inverse">请选择一个心栈：</h3>
+			<mt-picker
+				:slots="slots"
+				valueKey="name"
+				:visibleItemCount="7"
+				ref="locValue"></mt-picker>
+			<div class="p-8">
+				<mt-button size="large"
+					type="primary"
+					@click="confirmLoc">确认</mt-button>
+			</div>
+			<div class="p-8">
+				<p>不知道选择哪个？</p>
+				<p>选择 NO.0 测试开始试用</p>
+				<p>或 联系负责人确认心栈名字</p>
+			</div>
+		</mt-popup>
 	</div>
 </template>
 
@@ -56,47 +55,53 @@
 import { HomeIcon, EditIcon, MessageCircleIcon } from 'vue-feather-icons';
 import MainView from './main.vue';
 import Checkin from './checkin.vue';
+import Comment from './comment.vue';
+import xzTable from '../xz-table';
 
 export default {
 	name: 'home',
-	components: { HomeIcon, EditIcon, MessageCircleIcon, Checkin, MainView },
+	components: { HomeIcon, EditIcon, MessageCircleIcon, Checkin, MainView, Comment },
 	created() {
-		this.resetChange();
+		this.maybeFetch();
+		this.$nextTick(() => {
+			this.slots[0].defaultIndex = 3;
+		})
 	},
 	data() {
+		const nameTable = Object.keys(xzTable).map(key => {
+			return {
+				name: `NO.${key} ${xzTable[key]}`,
+				loc: key
+			};
+		});
+
 		return {
 			active: 'home',
-			hasChange: false,
-			comment: '',
-			cupSize: 0
+			locPopupVis: false,
+			slots: [
+				{
+					values: nameTable,
+					flex: 1,
+					defaultIndex: 0
+				}
+			]
 		};
 	},
 	methods: {
 		setActive(arg) {
 			this.active = arg;
 		},
-		confirmChange() {
-			this.hasChange = false;
-			this.$store.dispatch(
-				'updateComment',
-				{ comment: this.comment, cupSize: this.cupSize }
-			);
-		},
-		resetChange() {
-			this.hasChange = false;
-			this.comment = this.$store.state.comment;
-			this.cupSize = this.$store.state.cupSize;
-		}
-	},
-	watch: {
-		active(newValue, oldValue) {
-			if (newValue === 'comment') {
-				// Sync with store on change
-				this.resetChange();
-			} else if (oldValue === 'comment' && this.hasChange) {
-				// Save if he hasn't done so
-				this.confirmChange();
+		maybeFetch() {
+			const loc = localStorage.getItem('sign_loc');
+			if (!loc) {
+				this.locPopupVis = true;
+			} else {
+				this.$store.dispatch('fetchData')
 			}
+		},
+		confirmLoc() {
+			this.locPopupVis = false;
+			this.$store.dispatch('setLocation');
 		}
 	}
 }

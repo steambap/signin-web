@@ -4,7 +4,7 @@ import Vuex from 'vuex';
 Vue.use(Vuex);
 
 const state = {
-	location: 11,
+	location: '11',
 	date: new Date().toISOString().slice(0, 10),
 	names: [],
 	tags: [],
@@ -24,6 +24,9 @@ const getters = {
 const mutations = {
 	updateDate(state, newDate) {
 		state.date = newDate;
+	},
+	updateLocation(state, newLocation) {
+		state.location = newLocation;
 	},
 	addName(state, payload) {
 		state.names.push(payload.name);
@@ -45,6 +48,11 @@ const mutations = {
 const actions = {
 	setDate({commit, dispatch}, newDate) {
 		commit('updateDate', newDate);
+
+		return dispatch('fetchData');
+	},
+	setLocation({commit, dispatch}, newLocation) {
+		commit('updateLocation', newLocation);
 
 		return dispatch('fetchData');
 	},

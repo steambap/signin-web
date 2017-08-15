@@ -39,7 +39,7 @@ export default {
 	components: { HomeIcon, EditIcon, MessageCircleIcon, Checkin, MainView },
 	data() {
 		return {
-			active: 'checkin'
+			active: 'home'
 		};
 	},
 	methods: {

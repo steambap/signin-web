@@ -4,7 +4,7 @@
 			<div class="flex-2 d-flex border-right"
 				@click="activeCheckin">
 				<div class="flex-0 p-8">
-					今日签到
+					今日签到：
 					<div class="text-right">今日暂无</div>
 				</div>
 				<div class="flex-0 p-8 text-center">
@@ -28,7 +28,7 @@
 			</div>
 			<div class="flex-1 border-right p-8 text-center"
 				@click="pickLocation">
-				<p>天津南开</p>
+				<p>{{location}}</p>
 				<map-pin-icon></map-pin-icon>
 			</div>
 			<div class="flex-1 p-8 text-center"
@@ -49,30 +49,42 @@
 			position="bottom"
 			class="w-100">
 			<div class="picker-toolbar">
-				<span class="mint-datetime-action mint-datetime-cancel">取消</span>
-				<span class="mint-datetime-action mint-datetime-confirm">确定</span>
+				<span class="mint-datetime-action mint-datetime-cancel"
+					@click="locPickerVisible = false">取消</span>
+				<span class="mint-datetime-action mint-datetime-confirm"
+					@click="confirmLocation">确定</span>
 			</div>
 			<mt-picker
 				:slots="slots"
-				ref="locValue"
-				@change="confirmLocation"></mt-picker>
+				valueKey="name"
+				:visibleItemCount="7"
+				ref="locValue"></mt-picker>
 		</mt-popup>
 	</div>
 </template>
 
 <script>
 import { RefreshCwIcon, MessageCircleIcon, MapPinIcon, EditIcon } from 'vue-feather-icons';
+import xzTable from '../xz-table';
+
+const xzList = Object.keys(xzTable).map(key => xzTable[key]);
 
 export default {
 	name: 'main',
 	components: { RefreshCwIcon, MessageCircleIcon, MapPinIcon, EditIcon },
 	data() {
+		const nameTable = Object.keys(xzTable).map(key => {
+			return {
+				name: `NO.${key} ${xzTable[key]}`,
+				loc: key
+			};
+		});
 		return {
 			date: new Date(),
 			locPickerVisible: false,
 			slots: [
 				{
-					values: ['测试', '天津南开', '798'],
+					values: nameTable,
 					flex: 1
 				}
 			]
@@ -92,6 +104,9 @@ export default {
 		},
 		day() {
 			return this.date.getDate();
+		},
+		location() {
+			return xzTable[this.$store.state.location];
 		}
 	},
 	methods: {
@@ -114,7 +129,12 @@ export default {
 			this.$refs.locPicker.open();
 		},
 		confirmLocation() {
-			console.log(this.$refs.locValue);
+			const xzInfo = this.$refs.locValue.values[0];
+			if (!xzInfo) {
+				return;
+			}
+
+			this.$store.dispatch('setLocation', xzInfo.loc);
 		}
 	}
 }

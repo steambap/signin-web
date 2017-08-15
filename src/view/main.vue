@@ -1,5 +1,5 @@
 <template>
-	<div class="d-flex flex-column" id="main">
+	<div class="d-flex flex-column bg-white" id="main">
 		<div class="flex-1 d-flex border-bottom">
 			<div class="flex-2 d-flex border-right"
 				@click="activeCheckin">

@@ -9,7 +9,7 @@ const state = {
 	names: [],
 	tags: [],
 	comment: '',
-	cup_size: -1,
+	cupSize: -1,
 	lastSyncError: ''
 };
 
@@ -39,6 +39,10 @@ const mutations = {
 	deleteName(state, index) {
 		state.names.splice(index, 1);
 		state.tags.splice(index, 1);
+	},
+	updateComment(state, payload) {
+		state.comment = payload.comment;
+		state.cupSize = payload.cupSize;
 	},
 	setSyncErr(state, msg) {
 		state.lastSyncError = msg;
@@ -71,10 +75,15 @@ const actions = {
 
 		return dispatch('syncData');
 	},
-	fetchData() {
+	updateComment({commit, dispatch}, payload) {
+		commit('updateComment', payload);
+
+		return dispatch('syncData');
+	},
+	fetchData({commit}) {
 		return Promise.resolve(null);
 	},
-	syncData({commit}) {
+	syncData({commit, state}) {
 		return Promise.resolve(null).catch(err => {
 			const res = err.response;
 			if (res && res.data && res.data.msg) {

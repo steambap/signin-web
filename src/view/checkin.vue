@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div id="name-list">
 		<mt-cell v-for="item in nameList"
 			:key="item.index"
 			:title="item.name"
@@ -88,7 +88,7 @@ export default {
 	components: {checkbox},
 	data() {
 		return {
-			inputNamePopVis: true,
+			inputNamePopVis: false,
 			sheetVis: false,
 			editName: '',
 			actionIndex: -1,
@@ -129,7 +129,7 @@ export default {
 		nameList() {
 			return this.names.map((name, i) => {
 				const tagList = this.tags[i];
-				const tagSurfix = tagList ? '（' + tagList.join('，') + '）' : '';
+				const tagSurfix = tagList.join('') ? '（' + tagList.join('，') + '）' : '';
 				return {
 					name: (i + 1) + '、' + name + tagSurfix,
 					index: i
@@ -183,5 +183,13 @@ export default {
 	position: fixed;
 	right: 20px;
 	bottom: 75px;
+}
+#name-list {
+	position: fixed;
+	top: 0;
+	bottom: 55px;
+	left: 0;
+	right: 0;
+	overflow-y: auto;
 }
 </style>

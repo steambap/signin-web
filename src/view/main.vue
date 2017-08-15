@@ -133,7 +133,7 @@ export default {
 			if (!xzInfo) {
 				return;
 			}
-
+			this.locPickerVisible = false;
 			this.$store.dispatch('setLocation', xzInfo.loc);
 		}
 	}

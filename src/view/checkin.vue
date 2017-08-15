@@ -14,7 +14,7 @@
 			class="popup-fullscreen">
 			<div class="p-8">
 				<mt-field label="名字"
-					type="number"
+					type="text"
 					v-model.trim="editName"></mt-field>
 			</div>
 			<div class="mint-cell">
@@ -116,7 +116,7 @@ export default {
 				},
 				{
 					name: '编辑 ' + name,
-					method: this.deleteName
+					method: this.modifyName
 				}
 			]
 		},
@@ -142,18 +142,33 @@ export default {
 	},
 	methods: {
 		addName() {
+			this.actionIndex = -1;
 			this.inputNamePopVis = true;
+			// clear input
+			this.editName = '';
+			Object.keys(this.tagTable).forEach(key => {
+				this.tagTable[key] = false;
+			});
 		},
 		confirmName() {
 			const tagList = Object.keys(this.tagTable).filter(key => {
 				return this.tagTable[key];
 			});
+			const action = this.actionIndex > -1 ? 'editName' : 'addName';
 
-			this.$store.dispatch('addName', {name: this.editName, tagList});
+			this.$store.dispatch(action, {name: this.editName, tagList, index: this.actionIndex});
 			this.inputNamePopVis = false;
 		},
 		deleteName() {
 			this.$store.dispatch('deleteName', this.actionIndex);
+		},
+		modifyName() {
+			this.inputNamePopVis = true;
+			// refill input
+			this.editName = this.names[this.actionIndex];
+			Object.keys(this.tagTable).forEach(key => {
+				this.tagTable[key] = this.tags[this.actionIndex].indexOf(key) !== -1;
+			});
 		},
 		showAction(index) {
 			this.actionIndex = index;

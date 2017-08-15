@@ -2,7 +2,8 @@
 	<div>
 		<mt-cell v-for="item in nameList"
 			:key="item.index"
-			:title="item.name"></mt-cell>
+			:title="item.name"
+			@click.native="showAction(item.index)"></mt-cell>
 		<div class="mint-palette-button"
 			id="fab"
 			@click="addName">
@@ -73,6 +74,9 @@
 				</div>
 			</div>
 		</mt-popup>
+		<mt-actionsheet
+			:actions="actions"
+			v-model="sheetVis"></mt-actionsheet>
 	</div>
 </template>
 
@@ -85,7 +89,9 @@ export default {
 	data() {
 		return {
 			inputNamePopVis: true,
+			sheetVis: false,
 			editName: '',
+			actionIndex: -1,
 			tagTable: {
 				'负责人': false,
 				'熬粥': false,
@@ -101,6 +107,19 @@ export default {
 		};
 	},
 	computed: {
+		actions() {
+			const name = this.names[this.actionIndex];
+			return [
+				{
+					name: '删除 ' + name,
+					method: this.deleteName
+				},
+				{
+					name: '编辑 ' + name,
+					method: this.deleteName
+				}
+			]
+		},
 		names() {
 			return this.$store.state.names;
 		},
@@ -129,9 +148,16 @@ export default {
 			const tagList = Object.keys(this.tagTable).filter(key => {
 				return this.tagTable[key];
 			});
-			console.log(this.tagTable)
+
 			this.$store.dispatch('addName', {name: this.editName, tagList});
 			this.inputNamePopVis = false;
+		},
+		deleteName() {
+			this.$store.dispatch('deleteName', this.actionIndex);
+		},
+		showAction(index) {
+			this.actionIndex = index;
+			this.sheetVis = true;
 		}
 	}
 }

@@ -3,12 +3,20 @@ html, body {
 	margin: 0;
 }
 
+.w-100 {
+	width: 100%;
+}
+
 .d-flex {
 	display: flex;
 }
 
 .flex-column {
 	flex-direction: column;
+}
+
+.flex-0 {
+	flex: 1;
 }
 
 .flex-1 {
@@ -28,4 +36,18 @@ html, body {
 
 .text-center {
 	text-align: center;
+}
+
+.text-right {
+	text-align: right;
+}
+
+.popup-fullscreen {
+	width: 100%;
+	height: 100%;
+	background-color: white;
+}
+
+.p-8 {
+	padding: 8px;
 }

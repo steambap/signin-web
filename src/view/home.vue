@@ -2,7 +2,7 @@
 	<div>
 		<mt-tab-container v-model="active">
 			<mt-tab-container-item id="home">
-				<main-view></main-view>
+				<main-view :setActive="setActive"></main-view>
 			</mt-tab-container-item>
 			<mt-tab-container-item id="checkin">
 				<checkin></checkin>
@@ -39,8 +39,13 @@ export default {
 	components: { HomeIcon, EditIcon, MessageCircleIcon, Checkin, MainView },
 	data() {
 		return {
-			active: 'home'
+			active: 'checkin'
 		};
+	},
+	methods: {
+		setActive(arg) {
+			this.active = arg;
+		}
 	}
 }
 </script>

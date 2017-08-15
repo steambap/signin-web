@@ -4,14 +4,15 @@
 			<div class="flex-2 d-flex border-right"
 				@click="activeCheckin">
 				<div class="flex-0 p-8">
-					今日签到：
-					<div class="text-right">今日暂无</div>
+					<span class="text-inverse">今日签到：</span>
+					<div class="text-right">{{checkinMeta[0]}}</div>
+					<div class="text-right">{{checkinMeta[1]}}</div>
 				</div>
 				<div class="flex-0 p-8 text-center">
-					<edit-icon transform="scale(2) translate(0, 16)"></edit-icon>
+					<edit-icon transform="scale(2) translate(0, 16)" class="stroke-primary"></edit-icon>
 				</div>
 			</div>
-			<div class="flex-1 p-8 text-center">
+			<div class="flex-1 p-8 text-center text-grey">
 				<p>同步成功</p>
 				<refresh-cw-icon></refresh-cw-icon>
 			</div>
@@ -28,13 +29,13 @@
 			</div>
 			<div class="flex-1 border-right p-8 text-center"
 				@click="pickLocation">
-				<p>{{location}}</p>
+				<p class="text-inverse">{{location}}</p>
 				<map-pin-icon></map-pin-icon>
 			</div>
 			<div class="flex-1 p-8 text-center"
 				@click="activeComment">
-				<p>编辑备注</p>
-				<message-circle-icon></message-circle-icon>
+				<p class="text-inverse">编辑备注</p>
+				<message-circle-icon class="stroke-primary"></message-circle-icon>
 			</div>
 		</div>
 		<!-- popup -->
@@ -107,6 +108,16 @@ export default {
 		},
 		location() {
 			return xzTable[this.$store.state.location];
+		},
+		checkinMeta() {
+			const names = this.$store.state.names;
+			if (names.length === 0) {
+				return ['今天没有人', '点击添加'];
+			} else if (names.length === 1) {
+				return [names[0] + ' 老师', ''];
+			} else {
+				return [names[0], `等${names.length}位老师`]
+			}
 		}
 	},
 	methods: {
@@ -150,5 +161,8 @@ export default {
 }
 #date-cell small {
 	font-size: 1rem;
+}
+.stroke-primary {
+	stroke: #26a2ff;
 }
 </style>

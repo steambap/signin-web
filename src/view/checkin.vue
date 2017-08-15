@@ -183,6 +183,7 @@ export default {
 	position: fixed;
 	right: 20px;
 	bottom: 75px;
+	color: white;
 }
 #name-list {
 	position: fixed;

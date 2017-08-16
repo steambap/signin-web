@@ -44,8 +44,20 @@
 			</div>
 			<div class="p-8">
 				<p>不知道选择哪个？</p>
-				<p>选择 NO.0 测试开始试用</p>
-				<p>或 联系负责人确认心栈名字</p>
+				<p>选择 [NO.0 测试] 开始试用</p>
+				<p>或 联系负责人 确认心栈名字</p>
+			</div>
+		</mt-popup>
+		<mt-popup class="popup-fullscreen"
+			ref="fetchPopup"
+			v-model="isFetching"
+			position="right">
+			<h3 class="text-center text-inverse">连接服务器中...</h3>
+			<div class="p-8">
+				<mt-button size="large"
+					type="primary"
+					@click="retry"
+					:disabled="!syncError">重试</mt-button>
 			</div>
 		</mt-popup>
 	</div>
@@ -87,6 +99,26 @@ export default {
 			]
 		};
 	},
+	computed: {
+		isFetching: {
+			get: function () {
+				return this.$store.state.fetching;
+			},
+			set: function () {
+
+			}
+		},
+		syncError() {
+			return this.$store.state.lastSyncError;
+		},
+		fetchHint() {
+			if (this.isFetching) {
+				return '连接服务器中...';
+			}
+
+			return this.syncError;
+		}
+	},
 	methods: {
 		setActive(arg) {
 			this.active = arg;
@@ -96,12 +128,20 @@ export default {
 			if (!loc) {
 				this.locPopupVis = true;
 			} else {
-				this.$store.dispatch('fetchData')
+				this.handleFetch(loc);
 			}
 		},
 		confirmLoc() {
 			this.locPopupVis = false;
-			this.$store.dispatch('setLocation');
+			const xzInfo = this.$refs.locValue.values[0];
+			this.handleFetch(xzInfo.loc);
+		},
+		handleFetch(loc) {
+			this.locPopupVis = false;
+			this.$store.dispatch('setLocation', loc);
+		},
+		retry() {
+			this.$store.dispatch('fetchData');
 		}
 	}
 }

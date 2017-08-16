@@ -1,11 +1,13 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import axios from 'axios';
 
 Vue.use(Vuex);
 
-const apiOrigin = process.env.NODE_ENV === 'development'
-	? '/api/log'
-	: 'http://139.129.225.83:8900/log';
+const apiOrigin =
+	process.env.NODE_ENV === 'development'
+		? '/api/log'
+		: 'http://139.129.225.83:8900/log';
 
 const state = {
 	location: '11',
@@ -14,7 +16,8 @@ const state = {
 	tags: [],
 	comment: '',
 	cupSize: -1,
-	lastSyncError: ''
+	lastSyncError: '',
+	fetching: false
 };
 
 const getters = {
@@ -49,54 +52,86 @@ const mutations = {
 		state.comment = payload.comment;
 		state.cupSize = payload.cupSize;
 	},
-	setSyncErr(state, msg) {
+	setSyncError(state, msg) {
 		state.lastSyncError = msg;
+	},
+	startFetch(state) {
+		state.fetching = true;
+	},
+	endFetch(state) {
+		state.fetching = false;
+	},
+	fillData(state, data) {
+		state.names = data.names;
+		state.tags = data.tags;
+		state.comment = data.comment;
+		state.cupSize = data.cup_size;
 	}
 };
 
 const actions = {
-	setDate({commit, dispatch}, newDate) {
+	setDate({ commit, dispatch }, newDate) {
 		commit('updateDate', newDate);
 
 		return dispatch('fetchData');
 	},
-	setLocation({commit, dispatch}, newLocation) {
+	setLocation({ commit, dispatch }, newLocation) {
 		commit('updateLocation', newLocation);
 
 		return dispatch('fetchData');
 	},
-	addName({commit, dispatch}, payload) {
+	addName({ commit, dispatch }, payload) {
 		commit('addName', payload);
 
 		return dispatch('syncData');
 	},
-	editName({commit, dispatch}, payload) {
+	editName({ commit, dispatch }, payload) {
 		commit('editName', payload);
 
 		return dispatch('syncData');
 	},
-	deleteName({commit, dispatch}, index) {
+	deleteName({ commit, dispatch }, index) {
 		commit('deleteName', index);
 
 		return dispatch('syncData');
 	},
-	updateComment({commit, dispatch}, payload) {
+	updateComment({ commit, dispatch }, payload) {
 		commit('updateComment', payload);
 
 		return dispatch('syncData');
 	},
-	fetchData({commit}) {
-		return Promise.resolve(null);
-	},
-	syncData({commit, state}) {
-		return Promise.resolve(null).catch(err => {
+	fetchData({ commit, state }) {
+		commit('startFetch');
+
+		return axios.get(`${apiOrigin}?date=${state.date}&loc=${state.location}`).then(res => {
+			commit('endFetch');
+			const data = res.data;
+			commit('fillData', data);
+
+			return data;
+		}).catch(err => {
 			const res = err.response;
-			if (res && res.data && res.data.msg) {
-				commit('setSyncErr', res.data.msg)
-			} else {
-				commit('setSyncErr', String(err));
-			}
+			const errStr = (res && res.data && res.data.msg) ? res.data.msg : String(err);
+
+			commit('setSyncError', errStr);
 		});
+	},
+	syncData({ commit, state }) {
+		return axios
+			.post(`${apiOrigin}?date=${state.date}&loc=${state.location}`, {
+				names: state.names,
+				tags: state.tags,
+				comment: state.comment,
+				cup_size: state.cupSize
+			})
+			.catch(err => {
+				const res = err.response;
+				const errStr = (res && res.data && res.data.msg) ? res.data.msg : String(err);
+				
+				commit('setSyncError', errStr);
+
+				throw new Error(errStr);
+			});
 	}
 };
 

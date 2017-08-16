@@ -16,6 +16,7 @@
     "node": ">=6"
   },
   "devDependencies": {
+    "axios": "^0.16.2",
     "mint-ui": "^2.2.9",
     "poi": "^9.2.4",
     "vue-feather-icons": "^0.1.1",

@@ -82,10 +82,11 @@
 
 <script>
 import checkbox from '../component/checkbox.vue';
+import { toast } from 'mint-ui';
 
 export default {
 	name: 'checkin',
-	components: {checkbox},
+	components: { checkbox },
 	data() {
 		return {
 			inputNamePopVis: false,
@@ -156,11 +157,18 @@ export default {
 			});
 			const action = this.actionIndex > -1 ? 'editName' : 'addName';
 
-			this.$store.dispatch(action, {name: this.editName, tagList, index: this.actionIndex});
+			this.$store.dispatch(
+				action,
+				{ name: this.editName, tagList, index: this.actionIndex }
+			).catch(this.onSyncError);
 			this.inputNamePopVis = false;
 		},
 		deleteName() {
-			this.$store.dispatch('deleteName', this.actionIndex);
+			this.$store.dispatch('deleteName', this.actionIndex)
+				.catch(this.onSyncError);
+		},
+		onSyncError(err) {
+			this.$toast('同步失败：' + err);
 		},
 		modifyName() {
 			this.inputNamePopVis = true;

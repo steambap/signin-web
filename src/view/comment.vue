@@ -1,12 +1,12 @@
 <template>
 	<div>
 		<mt-field label="杯数"
-				type="number"
-				v-model="cupSize"></mt-field>
-			<mt-field label="备忘"
-				type="textarea"
-				rows="4"
-				v-model="comment"></mt-field>
+			type="number"
+			v-model.number="cupSize"></mt-field>
+		<mt-field label="备忘"
+			type="textarea"
+			rows="4"
+			v-model="comment"></mt-field>
 		<div class="d-flex bg-white">
 			<div class="flex-0 p-8">
 				<mt-button type="primary"
@@ -27,6 +27,8 @@
 </template>
 
 <script>
+import { toast } from 'mint-ui';
+
 export default {
 	name: 'comment',
 	props: ['active'],
@@ -50,7 +52,9 @@ export default {
 			this.$store.dispatch(
 				'updateComment',
 				{ comment: this.comment, cupSize: this.cupSize }
-			);
+			).catch(err => {
+				this.$toast('同步失败：' + err);
+			});
 		},
 		resetChange() {
 			this.comment = this.$store.state.comment;

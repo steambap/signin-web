@@ -11,7 +11,7 @@ const apiOrigin =
 
 const state = {
 	location: '11',
-	date: new Date().toISOString().slice(0, 10),
+	date: new Date(),
 	names: [],
 	tags: [],
 	comment: '',
@@ -25,6 +25,9 @@ const getters = {
 		return state.tags.map(tagStr => {
 			return tagStr.split('|');
 		});
+	},
+	date(state) {
+		return state.date.toISOString().slice(0, 10);
 	}
 };
 
@@ -60,6 +63,7 @@ const mutations = {
 	},
 	endFetch(state) {
 		state.fetching = false;
+		state.lastSyncError = '';
 	},
 	fillData(state, data) {
 		state.names = data.names;
@@ -100,10 +104,10 @@ const actions = {
 
 		return dispatch('syncData');
 	},
-	fetchData({ commit, state }) {
+	fetchData({ commit, state, getters }) {
 		commit('startFetch');
 
-		return axios.get(`${apiOrigin}?date=${state.date}&loc=${state.location}`).then(res => {
+		return axios.get(`${apiOrigin}?date=${getters.date}&loc=${state.location}`).then(res => {
 			commit('endFetch');
 			const data = res.data;
 			commit('fillData', data);
@@ -116,21 +120,22 @@ const actions = {
 			commit('setSyncError', errStr);
 		});
 	},
-	syncData({ commit, state }) {
+	syncData({ commit, state, getters }) {
 		return axios
-			.post(`${apiOrigin}?date=${state.date}&loc=${state.location}`, {
+			.post(`${apiOrigin}?date=${getters.date}&loc=${state.location}`, {
 				names: state.names,
 				tags: state.tags,
 				comment: state.comment,
 				cup_size: state.cupSize
 			})
+			.then(() => commit('endFetch'))
 			.catch(err => {
 				const res = err.response;
 				const errStr = (res && res.data && res.data.msg) ? res.data.msg : String(err);
 				
 				commit('setSyncError', errStr);
 
-				throw new Error(errStr);
+				return Promise.reject(errStr);
 			});
 	}
 };

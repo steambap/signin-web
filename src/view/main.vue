@@ -12,8 +12,13 @@
 					<edit-icon transform="scale(2) translate(0, 16)" class="stroke-primary"></edit-icon>
 				</div>
 			</div>
-			<div class="flex-1 p-8 text-center text-grey">
-				<p>同步成功</p>
+			<div class="flex-1 p-8 text-center"
+				:class="{
+					'text-grey': !syncError,
+					'text-danger': syncError
+				}"
+				@click="resync">
+				<p>{{syncHint}}</p>
 				<refresh-cw-icon></refresh-cw-icon>
 			</div>
 		</div>
@@ -96,14 +101,17 @@ export default {
 		}
 	},
 	computed: {
+		currentData() {
+			return this.$store.state.date;
+		},
 		year() {
-			return this.date.getFullYear();
+			return this.currentData.getFullYear();
 		},
 		month() {
-			return this.date.getMonth() + 1;
+			return this.currentData.getMonth() + 1;
 		},
 		day() {
-			return this.date.getDate();
+			return this.currentData.getDate();
 		},
 		location() {
 			return xzTable[this.$store.state.location];
@@ -117,6 +125,16 @@ export default {
 			} else {
 				return [names[0], `等${names.length}位老师`]
 			}
+		},
+		syncError() {
+			return this.$store.state.lastSyncError;
+		},
+		syncHint() {
+			if (this.syncError) {
+				return this.syncError + '\n点击同步';
+			}
+
+			return '同步成功';
 		}
 	},
 	methods: {
@@ -132,7 +150,7 @@ export default {
 		confirmDate() {
 			this.$store.dispatch(
 				'setDate',
-				this.date.toISOString().slice(0, 10)
+				this.date
 			);
 		},
 		pickLocation() {
@@ -145,6 +163,11 @@ export default {
 			}
 			this.locPickerVisible = false;
 			this.$store.dispatch('setLocation', xzInfo.loc);
+		},
+		resync() {
+			this.$store.dispatch('syncData').catch(err => {
+				this.$toast('同步失败：' + err);
+			})
 		}
 	}
 }
@@ -163,5 +186,8 @@ export default {
 }
 .stroke-primary {
 	stroke: #26a2ff;
+}
+.text-danger svg {
+	stroke: #ef4336;
 }
 </style>

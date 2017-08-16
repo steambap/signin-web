@@ -58,6 +58,7 @@ const mutations = {
 		state.cupSize = payload.cupSize;
 	},
 	setSyncError(state, msg) {
+		state.fetching = false;
 		state.lastSyncError = msg;
 	},
 	startFetch(state) {
@@ -114,7 +115,6 @@ const actions = {
 	},
 	fetchData({ commit, state, getters }) {
 		commit('startFetch');
-		console.log(getters.date, state.date.toISOString().slice(0, 10));
 
 		return axios.get(`${apiOrigin}?date=${getters.date}&loc=${state.location}`).then(res => {
 			commit('endFetch');

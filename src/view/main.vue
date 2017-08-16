@@ -8,9 +8,9 @@
 					<div class="text-right">{{checkinMeta[0]}}</div>
 					<div class="text-right">{{checkinMeta[1]}}</div>
 				</div>
-				<div class="flex-0 p-8 text-center">
-					<edit-icon transform="scale(2) translate(0, 16)"
-						style="transform: scale(2) translate(0, 16)"
+				<div class="flex-0 p-8 text-center" style="padding-top: 24px">
+					<edit-icon
+						width="48" height="48"
 						class="stroke-primary"></edit-icon>
 				</div>
 			</div>
@@ -167,9 +167,12 @@ export default {
 			this.$store.dispatch('setLocation', xzInfo.loc);
 		},
 		resync() {
+			if (!this.syncError) {
+				return;
+			}
 			this.$store.dispatch('syncData').catch(err => {
 				this.$toast('同步失败：' + err);
-			})
+			});
 		}
 	}
 }

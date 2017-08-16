@@ -212,6 +212,9 @@ export default {
 	bottom: 75px;
 	color: white;
 }
+#fab > div {
+	background-color: #26a2ff;
+}
 #name-list {
 	position: fixed;
 	top: 0;

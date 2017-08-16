@@ -52,7 +52,7 @@
 			ref="fetchPopup"
 			v-model="isFetching"
 			position="right">
-			<h3 class="text-center text-inverse">连接服务器中...</h3>
+			<h3 class="text-center text-inverse">{{fetchHint}}</h3>
 			<div class="p-8">
 				<mt-button size="large"
 					type="primary"
@@ -100,19 +100,22 @@ export default {
 		};
 	},
 	computed: {
+		fetching() {
+			return this.$store.state.fetching
+		},
+		syncError() {
+			return this.$store.state.lastSyncError;
+		},
 		isFetching: {
 			get: function () {
-				return this.$store.state.fetching;
+				return Boolean(this.fetching || this.syncError);
 			},
 			set: function () {
 
 			}
 		},
-		syncError() {
-			return this.$store.state.lastSyncError;
-		},
 		fetchHint() {
-			if (this.isFetching) {
+			if (this.fetching) {
 				return '连接服务器中...';
 			}
 

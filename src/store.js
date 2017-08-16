@@ -7,7 +7,7 @@ Vue.use(Vuex);
 const apiOrigin =
 	process.env.NODE_ENV === 'development'
 		? '/api/log'
-		: 'http://139.129.225.83:8900/log';
+		: 'http://121.42.167.194:8900/log';
 
 const state = {
 	location: '11',
@@ -16,8 +16,10 @@ const state = {
 	tags: [],
 	comment: '',
 	cupSize: -1,
+	// UI
 	lastSyncError: '',
-	fetching: false
+	fetching: false,
+	hideTabbar: false
 };
 
 const getters = {
@@ -27,7 +29,7 @@ const getters = {
 		});
 	},
 	date(state) {
-		return state.date.toISOString().slice(0, 10);
+		return getDateString(state.date);
 	}
 };
 
@@ -70,6 +72,12 @@ const mutations = {
 		state.tags = data.tags;
 		state.comment = data.comment;
 		state.cupSize = data.cup_size;
+	},
+	showTabbar(state) {
+		state.hideTabbar = false;
+	},
+	hideTabbar(state) {
+		state.hideTabbar = true;
 	}
 };
 
@@ -106,6 +114,7 @@ const actions = {
 	},
 	fetchData({ commit, state, getters }) {
 		commit('startFetch');
+		console.log(getters.date, state.date.toISOString().slice(0, 10));
 
 		return axios.get(`${apiOrigin}?date=${getters.date}&loc=${state.location}`).then(res => {
 			commit('endFetch');
@@ -149,3 +158,16 @@ const store = new Vuex.Store({
 });
 
 export default store;
+
+function getDateString(date) {
+	return date.getFullYear() +
+		'-' + pad(date.getMonth() + 1) +
+		'-' + pad(date.getDate());
+}
+
+function pad(number) {
+	if (number < 10) {
+		return '0' + number;
+	}
+	return number;
+}

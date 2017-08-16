@@ -9,7 +9,9 @@
 					<div class="text-right">{{checkinMeta[1]}}</div>
 				</div>
 				<div class="flex-0 p-8 text-center">
-					<edit-icon transform="scale(2) translate(0, 16)" class="stroke-primary"></edit-icon>
+					<edit-icon transform="scale(2) translate(0, 16)"
+						style="transform: scale(2) translate(0, 16)"
+						class="stroke-primary"></edit-icon>
 				</div>
 			</div>
 			<div class="flex-1 p-8 text-center"

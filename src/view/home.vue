@@ -1,17 +1,6 @@
 <template>
 	<div>
-		<mt-tab-container v-model="active">
-			<mt-tab-container-item id="home">
-				<main-view :setActive="setActive"></main-view>
-			</mt-tab-container-item>
-			<mt-tab-container-item id="checkin">
-				<checkin></checkin>
-			</mt-tab-container-item>
-			<mt-tab-container-item id="comment">
-				<comment :active="active"></comment>
-			</mt-tab-container-item>
-		</mt-tab-container>
-		<mt-tabbar v-model="active">
+		<mt-tabbar v-model="active" v-if="!hideTabbar">
 			<mt-tab-item id="home">
 				<home-icon slot="icon"></home-icon>
 				主页
@@ -25,6 +14,17 @@
 				备注
 			</mt-tab-item>
 		</mt-tabbar>
+		<mt-tab-container v-model="active">
+			<mt-tab-container-item id="home">
+				<main-view :setActive="setActive"></main-view>
+			</mt-tab-container-item>
+			<mt-tab-container-item id="checkin">
+				<checkin></checkin>
+			</mt-tab-container-item>
+			<mt-tab-container-item id="comment">
+				<comment :active="active"></comment>
+			</mt-tab-container-item>
+		</mt-tab-container>
 		<!-- popup -->
 		<mt-popup
 			ref="locPopup"
@@ -117,6 +117,9 @@ export default {
 			}
 
 			return this.syncError;
+		},
+		hideTabbar() {
+			return this.$store.state.hideTabbar;
 		}
 	},
 	methods: {

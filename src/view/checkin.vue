@@ -1,5 +1,5 @@
 <template>
-	<div id="name-list">
+	<div id="name-list" :style="{bottom: hideTabbar ? 0 : '55px'}">
 		<mt-cell v-for="item in nameList"
 			:key="item.index"
 			:title="item.name"
@@ -139,6 +139,9 @@ export default {
 		},
 		hasName() {
 			return this.editName.length > 0;
+		},
+		hideTabbar() {
+			return this.$store.state.hideTabbar;
 		}
 	},
 	methods: {
@@ -182,6 +185,22 @@ export default {
 			this.actionIndex = index;
 			this.sheetVis = true;
 		}
+	},
+	watch: {
+		sheetVis(newValue) {
+			if (newValue) {
+				this.$store.commit('hideTabbar');
+			} else {
+				this.$store.commit('showTabbar');
+			}
+		},
+		inputNamePopVis(newValue) {
+			if (newValue) {
+				this.$store.commit('hideTabbar');
+			} else {
+				this.$store.commit('showTabbar');
+			}
+		}
 	}
 }
 </script>
@@ -196,7 +215,6 @@ export default {
 #name-list {
 	position: fixed;
 	top: 0;
-	bottom: 55px;
 	left: 0;
 	right: 0;
 	overflow-y: auto;

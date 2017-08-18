@@ -7,7 +7,7 @@ Vue.use(Vuex);
 const apiOrigin =
 	process.env.NODE_ENV === 'development'
 		? '/api/log'
-		: 'http://121.42.167.194:8900/log';
+		: '/log';
 
 const state = {
 	location: '11',

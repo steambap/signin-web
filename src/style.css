@@ -15,10 +15,6 @@ body {
 	display: flex;
 }
 
-.flex-column {
-	flex-direction: column;
-}
-
 .flex-0 {
 	flex: 1;
 }

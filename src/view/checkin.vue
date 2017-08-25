@@ -36,10 +36,10 @@
 						<checkbox :checked.sync="tagTable['摄影']" value="摄影"></checkbox>
 					</div>
 					<div class="mint-cell-title">
-						<checkbox :checked.sync="tagTable['日志']" value="日志"></checkbox>
+						<checkbox :checked.sync="tagTable['环保']" value="环保"></checkbox>
 					</div>
 					<div class="mint-cell-title">
-						<checkbox :checked.sync="tagTable['文宣']" value="文宣"></checkbox>
+						<checkbox :checked.sync="tagTable['签到']" value="签到"></checkbox>
 					</div>
 				</div>
 			</div>
@@ -53,9 +53,6 @@
 					</div>
 					<div class="mint-cell-title">
 						<checkbox :checked.sync="tagTable['后勤']" value="后勤"></checkbox>
-					</div>
-					<div class="mint-cell-title">
-						<checkbox :checked.sync="tagTable['环保']" value="环保"></checkbox>
 					</div>
 				</div>
 			</div>
@@ -98,12 +95,11 @@ export default {
 				'熬粥': false,
 				'前行': false,
 				'摄影': false,
-				'日志': false,
-				'文宣': false,
+				'环保': false,
+				'签到': false,
 				'新人': false,
 				'结行': false,
-				'后勤': false,
-				'环保': false
+				'后勤': false
 			}
 		};
 	},

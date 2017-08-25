@@ -3477,7 +3477,7 @@ poi-load-config@^1.1.1:
     postcss-load-config "^1.2.0"
     use-config "^1.0.0"
 
-poi@^9.3.0:
+poi@9.3.0:
   version "9.3.0"
   resolved "https://registry.yarnpkg.com/poi/-/poi-9.3.0.tgz#f68f0249dd814fa4d8d3b1bbb5fc17c5fe6b5861"
   dependencies:

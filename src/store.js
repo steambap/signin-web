@@ -18,7 +18,6 @@ const state = {
 	cupSize: -1,
 	// UI
 	lastSyncError: '',
-	fetching: false,
 	hideTabbar: false
 };
 
@@ -58,15 +57,7 @@ const mutations = {
 		state.cupSize = payload.cupSize;
 	},
 	setSyncError(state, msg) {
-		state.fetching = false;
 		state.lastSyncError = msg;
-	},
-	startFetch(state) {
-		state.fetching = true;
-	},
-	endFetch(state) {
-		state.fetching = false;
-		state.lastSyncError = '';
 	},
 	fillData(state, data) {
 		state.names = data.names;
@@ -114,19 +105,11 @@ const actions = {
 		return dispatch('syncData');
 	},
 	fetchData({ commit, state, getters }) {
-		commit('startFetch');
-
 		return axios.get(`${apiOrigin}?date=${getters.date}&loc=${state.location}`).then(res => {
-			commit('endFetch');
 			const data = res.data;
 			commit('fillData', data);
 
 			return data;
-		}).catch(err => {
-			const res = err.response;
-			const errStr = (res && res.data && res.data.msg) ? res.data.msg : String(err);
-
-			commit('setSyncError', errStr);
 		});
 	},
 	syncData({ commit, state, getters }) {
@@ -137,7 +120,6 @@ const actions = {
 				comment: state.comment,
 				cup_size: state.cupSize
 			})
-			.then(() => commit('endFetch'))
 			.catch(err => {
 				const res = err.response;
 				const errStr = (res && res.data && res.data.msg) ? res.data.msg : String(err);

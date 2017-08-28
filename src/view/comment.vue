@@ -11,7 +11,7 @@
 			<div class="flex-0 p-8">
 				<mt-button type="primary"
 					size="large"
-					:disabled="!hasChange"
+					:disabled="!hasChange || !inputValid"
 					@click="confirmChange">
 					保存更改</mt-button>
 			</div>
@@ -45,6 +45,9 @@ export default {
 		hasChange() {
 			return this.comment !== this.$store.state.comment ||
 				this.cupSize !== this.$store.state.cupSize;
+		},
+		inputValid() {
+			return Number.isFinite(this.cupSize);
 		}
 	},
 	methods: {
@@ -66,7 +69,7 @@ export default {
 			if (newValue === 'comment') {
 				// Sync with store on change
 				this.resetChange();
-			} else if (oldValue === 'comment' && this.hasChange) {
+			} else if (oldValue === 'comment' && this.hasChange && this.inputValid) {
 				// Save if he hasn't done so
 				this.confirmChange();
 			}

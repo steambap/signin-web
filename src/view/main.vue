@@ -153,7 +153,9 @@ export default {
 			this.$store.dispatch(
 				'setDate',
 				this.date
-			);
+			).catch(err => {
+				this.$toast('获取数据失败：' + err);
+			});
 		},
 		pickLocation() {
 			this.$refs.locPicker.open();
@@ -164,7 +166,9 @@ export default {
 				return;
 			}
 			this.locPickerVisible = false;
-			this.$store.dispatch('setLocation', xzInfo.loc);
+			this.$store.dispatch('setLocation', xzInfo.loc).catch(err => {
+				this.$toast('获取数据失败：' + err);
+			});
 		},
 		resync() {
 			if (!this.syncError) {

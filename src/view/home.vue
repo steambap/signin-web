@@ -57,7 +57,7 @@
 				<mt-button size="large"
 					type="primary"
 					@click="retry"
-					:disabled="!syncError">重试</mt-button>
+					:disabled="!fetchError">重试</mt-button>
 			</div>
 		</mt-popup>
 	</div>
@@ -77,7 +77,7 @@ export default {
 		this.maybeFetch();
 		this.$nextTick(() => {
 			this.slots[0].defaultIndex = 3;
-		})
+		});
 	},
 	data() {
 		const nameTable = Object.keys(xzTable).map(key => {
@@ -96,21 +96,17 @@ export default {
 					flex: 1,
 					defaultIndex: 0
 				}
-			]
+			],
+			fetching: false,
+			fetchError: ''
 		};
 	},
 	computed: {
-		fetching() {
-			return this.$store.state.fetching
-		},
-		syncError() {
-			return this.$store.state.lastSyncError;
-		},
 		isFetching: {
-			get: function () {
-				return Boolean(this.fetching || this.syncError);
+			get: function() {
+				return Boolean(this.fetching || this.fetchError);
 			},
-			set: function () {
+			set: function() {
 
 			}
 		},
@@ -119,7 +115,7 @@ export default {
 				return '连接服务器中...';
 			}
 
-			return this.syncError;
+			return this.fetchError;
 		},
 		hideTabbar() {
 			return this.$store.state.hideTabbar;
@@ -144,10 +140,27 @@ export default {
 		},
 		handleFetch(loc) {
 			this.locPopupVis = false;
-			this.$store.dispatch('setLocation', loc);
+			this.fetching = true;
+			this.$store.dispatch('setLocation', loc)
+				.then(this.onFetchDone)
+				.catch(this.onFetchError);
 		},
 		retry() {
-			this.$store.dispatch('fetchData');
+			this.fetching = true;
+			this.$store.dispatch('fetchData')
+				.then(this.onFetchDone)
+				.catch(this.onFetchError);
+		},
+		onFetchDone() {
+			this.fetching = false;
+			this.fetchError = '';
+		},
+		onFetchError(err) {
+			const res = err.response;
+			const errStr = (res && res.data && res.data.msg) ? res.data.msg : String(err);
+
+			this.fetching = false;
+			this.fetchError = errStr;
 		}
 	}
 }

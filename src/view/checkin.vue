@@ -13,8 +13,10 @@
 			position="right"
 			class="popup-fullscreen">
 			<div class="p-8">
-				<mt-field label="名字"
+				<mt-field
 					type="text"
+					placeholder="请输入老师的名字"
+					ref="inputName"
 					v-model.trim="editName"></mt-field>
 			</div>
 			<div class="mint-cell">

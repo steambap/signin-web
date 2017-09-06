@@ -17,6 +17,7 @@
 					type="text"
 					placeholder="请输入老师的名字"
 					ref="inputName"
+					:state="hasName && !hasValidName ? 'error' : ''"
 					v-model.trim="editName"></mt-field>
 			</div>
 			<div class="mint-cell">
@@ -63,7 +64,7 @@
 					<mt-button type="primary"
 						size="large"
 						@click="confirmName"
-						:disabled="!hasName">确定</mt-button>
+						:disabled="!hasValidName">确定</mt-button>
 				</div>
 				<div class="flex-0 p-8">
 					<mt-button type="default"
@@ -137,6 +138,25 @@ export default {
 		},
 		hasName() {
 			return this.editName.length > 0;
+		},
+		hasValidName() {
+			if (!this.hasName) {
+				return false;
+			}
+
+			if (this.editName.indexOf('、') !== -1) {
+				return false;
+			}
+
+			if (this.names.indexOf(this.editName) !== -1) {
+				return false;
+			}
+
+			if (this.editName.length > 7) {
+				return false;
+			}
+
+			return true;
 		},
 		hideTabbar() {
 			return this.$store.state.hideTabbar;

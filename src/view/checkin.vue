@@ -148,7 +148,8 @@ export default {
 				return false;
 			}
 
-			if (this.names.indexOf(this.editName) !== -1) {
+			const dupNameIndex = this.names.indexOf(this.editName);
+			if (dupNameIndex !== -1 && dupNameIndex !== this.actionIndex) {
 				return false;
 			}
 

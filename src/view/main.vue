@@ -41,8 +41,8 @@
 			</div>
 			<div class="flex-1 p-8 text-center"
 				@click="activeComment">
-				<p class="text-inverse">编辑备注</p>
-				<message-circle-icon class="stroke-primary"></message-circle-icon>
+				<p class="text-inverse">编辑杯数</p>
+				<trash-icon class="stroke-primary"></trash-icon>
 			</div>
 		</div>
 		<!-- popup -->
@@ -72,12 +72,12 @@
 </template>
 
 <script>
-import { RefreshCwIcon, MessageCircleIcon, MapPinIcon, EditIcon } from 'vue-feather-icons';
+import { RefreshCwIcon, TrashIcon, MapPinIcon, EditIcon } from 'vue-feather-icons';
 import xzTable from '../xz-table';
 
 export default {
 	name: 'main',
-	components: { RefreshCwIcon, MessageCircleIcon, MapPinIcon, EditIcon },
+	components: { RefreshCwIcon, TrashIcon, MapPinIcon, EditIcon },
 	data() {
 		const nameTable = Object.keys(xzTable).map(key => {
 			return {

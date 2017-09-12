@@ -10,8 +10,8 @@
 				签到
 			</mt-tab-item>
 			<mt-tab-item id="comment">
-				<message-circle-icon slot="icon"></message-circle-icon>
-				备注
+				<trash-icon slot="icon"></trash-icon>
+				杯数
 			</mt-tab-item>
 		</mt-tabbar>
 		<mt-tab-container v-model="active">
@@ -64,7 +64,7 @@
 </template>
 
 <script>
-import { HomeIcon, EditIcon, MessageCircleIcon } from 'vue-feather-icons';
+import { HomeIcon, EditIcon, TrashIcon } from 'vue-feather-icons';
 import MainView from './main.vue';
 import Checkin from './checkin.vue';
 import Comment from './comment.vue';
@@ -72,7 +72,7 @@ import xzTable from '../xz-table';
 
 export default {
 	name: 'home',
-	components: { HomeIcon, EditIcon, MessageCircleIcon, Checkin, MainView, Comment },
+	components: { HomeIcon, EditIcon, TrashIcon, Checkin, MainView, Comment },
 	created() {
 		this.maybeFetch();
 		this.$nextTick(() => {

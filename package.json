@@ -6,7 +6,7 @@
   "author": {
     "name": "石威林",
     "email": "934587911@qq.com",
-    "url": "weilinshi.org"
+    "url": "http://weilinshi.org"
   },
   "scripts": {
     "start": "poi src/index.js",
